@@ -1,0 +1,44 @@
+clc;
+clear all;
+
+% Define the function and its derivative
+f = @(x) x^3 - 6*x^2 + 9*x - 4;
+df = @(x) 3*x^2 - 12*x + 9;
+
+% Initial guess
+x = input('Enter initial estimate: '); 
+tolerance = 0.001;  % Convergence criteria
+max_iter = 100;      % Maximum iterations
+
+iterations = 0;
+x_values = [];  % Store x values for analysis
+dx = inf;  % Initialize dx to a high value
+
+disp("Iteration   x_old      f(x)      df(x)      dx      x_new");
+disp("------------------------------------------------------------");
+
+while abs(dx) >= tolerance && iterations < max_iter
+    fx = f(x);
+    dfx = df(x);
+    
+    if abs(dfx) < 1e-6  % Prevent division by zero
+        disp("Derivative is too small, method may fail.");
+        break;
+    end
+
+    dx = -fx / dfx;
+    x_new = x + dx;
+    x_values = [x_values; x_new];  % Store values for analysis
+
+    % Display results in a structured way
+    disp([num2str(iterations), "        ", num2str(x, '%.5f'), "   ", ...
+          num2str(fx, '%.5f'), "   ", num2str(dfx, '%.5f'), "   ", ...
+          num2str(dx, '%.5f'), "   ", num2str(x_new, '%.5f')]);
+
+    x = x_new;
+    iterations = iterations + 1;
+end
+
+disp("------------------------------------------------------------");
+disp(["Approximate root: ", num2str(x_new, '%.5f')]);
+disp(["Total iterations: ", num2str(iterations)]);
